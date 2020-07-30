@@ -1,2 +1,2 @@
 # profil-software-recruitment
-Simple python project with SQLite
+Simple Python 3.8.3 project with SQLite3
