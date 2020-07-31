@@ -62,5 +62,8 @@ class JsonLoader:
         if type(d2) is str:
             d2 = datetime.strptime(d2, date_format).date()
             d2 = date(datetime.now().year, d2.month, d2.day)
-        return d1 - d2
+        result = (d1 - d2).days
+        if result < 0:
+            result = 365 - abs(result)
+        return result
         
