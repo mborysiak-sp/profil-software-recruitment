@@ -1,5 +1,3 @@
-import os
-import json
 from peewee import *
 from playhouse.sqlite_ext import SqliteExtDatabase, JSONField
 
@@ -9,14 +7,30 @@ db = SqliteExtDatabase("persons.db", pragmas=(
     ("foreign_keys", 1)))
 
 
-class BaseModel(Model):
+def insert_json(data):
+    with db.atomic():
+        for batch in chunked(data, 1):
+            Person.insert_many(batch).execute()
+
+
+class Person(Model):
     class Meta:
         database = db
 
-
-class Person(BaseModel):
     __tablename__ = "person"
-    json_data = JSONField(json_dumps=json.dumps)
+
+    gender = TextField()
+    name = JSONField()
+    location = JSONField()
+    email = TextField()
+    login = JSONField()
+    dob = JSONField()
+    dtb = TextField()
+    registered = JSONField()
+    phone = TextField()
+    cell = TextField()
+    id = JSONField()
+    nat = TextField()
 
 
 Person.create_table()
