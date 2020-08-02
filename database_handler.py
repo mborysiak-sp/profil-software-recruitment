@@ -1,6 +1,7 @@
-from peewee import Model, TextField
+from peewee import Model, TextField, chunked
 from playhouse.sqlite_ext import SqliteExtDatabase
 import json
+
 
 db = SqliteExtDatabase("persons.db", pragmas=(
     ("cache_size", -1024 * 64),
@@ -9,21 +10,9 @@ db = SqliteExtDatabase("persons.db", pragmas=(
 
 
 def insert_json(data):
-    # for element in data:
-    #     Person.create(gender=element["gender"],
-    #                   name=element["name"],
-    #                   location=element["location"],
-    #                   email=element["location"],
-    #                   login=element["login"],
-    #                   dob=element["dob"],
-    #                   dtb=element["dtb"],
-    #                   registered=element["registered"],
-    #                   phone=element["phone"],
-    #                   cell=element["cell"],
-    #                   id=element["id"],
-    #                   nat=element["nat"]
-    #                   )
-    Person.insert_many(data)
+    with db.atomic():
+        for batch in chunked(data, 5):
+            Person.insert_many(batch).execute()
 
 
 class MyJSONField(TextField):
