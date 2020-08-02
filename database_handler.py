@@ -1,5 +1,6 @@
-from peewee import *
-from playhouse.sqlite_ext import SqliteExtDatabase, JSONField
+from peewee import Model, TextField
+from playhouse.sqlite_ext import SqliteExtDatabase
+import json
 
 db = SqliteExtDatabase("persons.db", pragmas=(
     ("cache_size", -1024 * 64),
@@ -8,9 +9,30 @@ db = SqliteExtDatabase("persons.db", pragmas=(
 
 
 def insert_json(data):
-    with db.atomic():
-        for batch in chunked(data, 1):
-            Person.insert_many(batch).execute()
+    # for element in data:
+    #     Person.create(gender=element["gender"],
+    #                   name=element["name"],
+    #                   location=element["location"],
+    #                   email=element["location"],
+    #                   login=element["login"],
+    #                   dob=element["dob"],
+    #                   dtb=element["dtb"],
+    #                   registered=element["registered"],
+    #                   phone=element["phone"],
+    #                   cell=element["cell"],
+    #                   id=element["id"],
+    #                   nat=element["nat"]
+    #                   )
+    Person.insert_many(data)
+
+
+class MyJSONField(TextField):
+    def db_value(self, value):
+        return json.dumps(value)
+
+    def python_value(self, value):
+        if value is not None:
+            return json.loads(value)
 
 
 class Person(Model):
@@ -18,18 +40,17 @@ class Person(Model):
         database = db
 
     __tablename__ = "person"
-
     gender = TextField()
-    name = JSONField()
-    location = JSONField()
+    name = MyJSONField()
+    location = MyJSONField()
     email = TextField()
-    login = JSONField()
-    dob = JSONField()
+    login = MyJSONField()
+    dob = MyJSONField()
     dtb = TextField()
-    registered = JSONField()
+    registered = MyJSONField()
     phone = TextField()
     cell = TextField()
-    id = JSONField()
+    id = MyJSONField()
     nat = TextField()
 
 
