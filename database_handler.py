@@ -1,6 +1,6 @@
+import json
 from peewee import Model, TextField, chunked
 from playhouse.sqlite_ext import SqliteExtDatabase
-import json
 
 
 db = SqliteExtDatabase("persons.db", pragmas=(
@@ -22,6 +22,7 @@ class MyJSONField(TextField):
     def python_value(self, value):
         if value is not None:
             return json.loads(value)
+        return None
 
 
 class Person(Model):
