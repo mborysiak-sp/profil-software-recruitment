@@ -1,4 +1,4 @@
-import database_handler
+from database_handler import DatabaseHandler
 from json_loader import JsonLoader
 
 
@@ -11,7 +11,13 @@ def get_modified_json():
 
 def __main__():
     data = get_modified_json()["results"]
+    database_handler = DatabaseHandler()
     database_handler.insert_json(data)
+    print(database_handler.get_gender_percent("male"))
+    print(database_handler.get_gender_percent("female"))
+    print(database_handler.get_average_gender_age("male"))
+    print(database_handler.get_average_gender_age("female"))
+    print(database_handler.get_average_gender_age("all"))
 
 
 if __name__ == "__main__":
