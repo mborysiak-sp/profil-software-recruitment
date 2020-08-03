@@ -46,6 +46,35 @@ class DatabaseHandler:
         return self.calculate_average_age(self.get_persons_by_gender(gender).dicts(),
                                           self.get_persons_by_gender(gender).count())
 
+    def get_city_population(self, city_name):
+        population = 0
+        cities_with_populations = {}
+
+
+            # if person["location"]["city"] == city_name:
+
+        # population = self.get_all_persons().where(Person.location == city_name).count()
+        # for` location in Person.select(Person.location["location"]["city"]).dicts():
+        #     print(location)
+
+    def get_all_cities(self):
+        locations = Person.select(Person.location).dicts()
+        cities = []
+        for location in locations:
+            cities.append(location["location"]["city"])
+        return list(set(cities))
+
+    def get_n_popular_cities(self, n):
+        cities = {}
+        for city in self.get_all_cities():
+            cities[city] = 0
+        for person in self.get_all_persons().dicts():
+            cities[person["location"]["city"]] = cities[person["location"]["city"]] + 1
+        # print("finished")
+        # sorted_cities = sorted(cities.items(), key=lambda x: x[1])
+        # for i in sorted_cities:
+        #    print(i[0], i[1])
+
 
 class Person(Model):
     class MyJSONField(TextField):
