@@ -6,6 +6,40 @@ class QueryHandler:
     def get_all_persons(self):
         return Person.select()
 
+
+class PopularElementsHandler(QueryHandler):
+
+    def __init__(self, searched_field, searched_keys):
+        self.searched_field = searched_field
+        self.searched_keys = searched_keys
+
+    def sort_dictionary_decreasing(self, dictionary):
+        return sorted(dictionary.items(), key=lambda x: x[1], reverse=True)
+
+    def get_counts(self):
+        # values_tuple[0] are just unique values, values_tuple[1] is list of all values
+        values = {}
+        values_tuple = self.get_all()
+        for value in values_tuple[0]:
+            values[value] = 0
+        for value in values_tuple[1]:
+            values[value] = values[value] + 1
+        return values
+
+    def get_all(self):
+        elements = Person.select(self.searched_field).dicts()
+        values = []
+        for element in elements:
+            values.append(element[self.searched_keys[0]][self.searched_keys[1]])
+        return list(set(values)), values
+
+    def get_n_popular_values(self, n):
+        sorted_values = self.sort_dictionary_decreasing(self.get_counts())
+        return sorted_values[0:n]
+
+
+class GenderHandler(QueryHandler):
+
     def get_persons_by_gender(self, gender):
         return Person.select().where(Person.gender == gender)
 
@@ -27,48 +61,3 @@ class QueryHandler:
 
         return self.calculate_average_age(self.get_persons_by_gender(gender).dicts(),
                                           self.get_persons_by_gender(gender).count())
-
-    def sort_dictionary_decreasing(self, cities):
-        return sorted(cities.items(), key=lambda x: x[1], reverse=True)
-
-    def get_city_populations(self):
-        # cities_tuple[0] are just unique cities, cities_tuple[1] is list of all cities
-        cities = {}
-        cities_tuple = self.get_all_cities()
-        for city in cities_tuple[0]:
-            cities[city] = 0
-        for city in cities_tuple[1]:
-            cities[city] = cities[city] + 1
-        return cities
-
-    def get_all_cities(self):
-        locations = Person.select(Person.location).dicts()
-        cities = []
-        for location in locations:
-            cities.append(location["location"]["city"])
-        return list(set(cities)), cities
-
-    def get_n_popular_cities(self, n):
-        sorted_cities = self.sort_dictionary_decreasing(self.get_city_populations())
-        return sorted_cities[0:n]
-
-    def get_password_counts(self):
-        # password_tuple[0] are just unique passwords, password_tuple[1] is list of all passwords
-        passwords = {}
-        passwords_tuple = self.get_all_passwords()
-        for password in passwords_tuple[0]:
-            passwords[password] = 0
-        for password in passwords_tuple[1]:
-            passwords[password] = passwords[password] + 1
-        return passwords
-
-    def get_all_passwords(self):
-        logins = Person.select(Person.login).dicts()
-        passwords = []
-        for login in logins:
-            passwords.append(login["login"]["password"])
-        return list(set(passwords)), passwords
-
-    def get_n_popular_passwords(self, n):
-        sorted_passwords = self.sort_dictionary_decreasing(self.get_password_counts())
-        return sorted_passwords[0:n]

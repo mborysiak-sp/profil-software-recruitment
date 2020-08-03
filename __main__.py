@@ -1,5 +1,5 @@
-from database_handler import DatabaseHandler
-from query_handler import QueryHandler
+from database_handler import DatabaseHandler, Person
+from query_handler import PopularElementsHandler
 from json_loader import JsonLoader
 
 
@@ -19,8 +19,14 @@ def __main__():
     # print(database_handler.get_average_gender_age("male"))
     # print(database_handler.get_average_gender_age("female"))
     # print(database_handler.get_average_gender_age("all"))
-    my_query_handler = QueryHandler()
-    for element in my_query_handler.get_n_popular_cities(5):
+
+    my_cities_handler = PopularElementsHandler(Person.location, ("location", "city"))
+    my_passwords_handler = PopularElementsHandler(Person.login, ("login", "password"))
+
+    for element in my_cities_handler.get_n_popular_values(5):
+        print(element)
+
+    for element in my_passwords_handler.get_n_popular_values(5):
         print(element)
 
 
