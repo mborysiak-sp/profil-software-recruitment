@@ -32,6 +32,7 @@ class QueryHandler:
         return sorted(cities.items(), key=lambda x: x[1], reverse=True)
 
     def get_city_populations(self):
+        # cities_tuple[0] are just unique cities, cities_tuple[1] is list of all cities
         cities = {}
         cities_tuple = self.get_all_cities()
         for city in cities_tuple[0]:
@@ -51,6 +52,16 @@ class QueryHandler:
         sorted_cities = self.sort_dictionary_decreasing(self.get_city_populations())
         return sorted_cities[0:n]
 
+    def get_password_counts(self):
+        # password_tuple[0] are just unique passwords, password_tuple[1] is list of all passwords
+        passwords = {}
+        passwords_tuple = self.get_all_passwords()
+        for password in passwords_tuple[0]:
+            passwords[password] = 0
+        for password in passwords_tuple[1]:
+            passwords[password] = passwords[password] + 1
+        return passwords
+
     def get_all_passwords(self):
         logins = Person.select(Person.login).dicts()
         passwords = []
@@ -59,4 +70,5 @@ class QueryHandler:
         return list(set(passwords)), passwords
 
     def get_n_popular_passwords(self, n):
-        pass
+        sorted_passwords = self.sort_dictionary_decreasing(self.get_password_counts())
+        return sorted_passwords[0:n]
