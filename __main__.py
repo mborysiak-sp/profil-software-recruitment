@@ -20,7 +20,8 @@ def __main__():
     # print(database_handler.get_average_gender_age("female"))
     # print(database_handler.get_average_gender_age("all"))
     my_query_handler = QueryHandler()
-    my_query_handler.get_n_popular_cities(5)
+    for element in my_query_handler.get_n_popular_cities(5):
+        print(element)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,8 @@
 from database_handler import Person
 
+
 class QueryHandler:
+
     def get_all_persons(self):
         return Person.select()
 
@@ -26,12 +28,16 @@ class QueryHandler:
         return self.calculate_average_age(self.get_persons_by_gender(gender).dicts(),
                                           self.get_persons_by_gender(gender).count())
 
+    def sort_dictionary_decreasing(self, cities):
+        return sorted(cities.items(), key=lambda x: x[1], reverse=True)
+
     def get_city_populations(self):
         cities = {}
-        for city in self.get_all_cities():
+        cities_tuple = self.get_all_cities()
+        for city in cities_tuple[0]:
             cities[city] = 0
-        for person in self.get_all_persons().dicts():
-            cities[person["location"]["city"]] = cities[person["location"]["city"]] + 1
+        for city in cities_tuple[1]:
+            cities[city] = cities[city] + 1
         return cities
 
     def get_all_cities(self):
@@ -39,12 +45,18 @@ class QueryHandler:
         cities = []
         for location in locations:
             cities.append(location["location"]["city"])
-        return list(set(cities))
-
-    def sort(self, cities):
-        return sorted(cities.items(), key=lambda x: x[1], reverse=True)
+        return list(set(cities)), cities
 
     def get_n_popular_cities(self, n):
-        sorted_cities = self.sort(self.get_city_populations())
+        sorted_cities = self.sort_dictionary_decreasing(self.get_city_populations())
         return sorted_cities[0:n]
 
+    def get_all_passwords(self):
+        logins = Person.select(Person.login).dicts()
+        passwords = []
+        for login in logins:
+            passwords.append(login["login"]["password"])
+        return list(set(passwords)), passwords
+
+    def get_n_popular_passwords(self, n):
+        pass
