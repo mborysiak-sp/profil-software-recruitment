@@ -1,3 +1,4 @@
+from utils import string_to_date
 from database_handler import Person
 
 
@@ -36,6 +37,19 @@ class PopularElementsHandler(QueryHandler):
     def get_n_popular_values(self, n):
         sorted_values = self.sort_dictionary_decreasing(self.get_counts())
         return sorted_values[0:n]
+
+
+class DateHandler(QueryHandler):
+
+    def __init__(self, first_date, second_date):
+        self.first_date = string_to_date(first_date, "%Y-%m-%d")
+        self.second_date = string_to_date(second_date, "%Y-%m-%d")
+
+    def get_persons_between_dates(self):
+        return filter(lambda person: self.first_date
+                                     < string_to_date(person["dob"]["date"],
+                                                      "%Y-%m-%dT%H:%M:%S.%fZ")
+                                     < self.second_date, self.get_all_persons().dicts())
 
 
 class GenderHandler(QueryHandler):

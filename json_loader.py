@@ -2,6 +2,7 @@ import json
 import re
 from datetime import datetime
 from datetime import date
+from utils import string_to_date
 
 
 class JsonLoader:
@@ -38,11 +39,10 @@ class JsonLoader:
             element["cell"] = self.remove_special_characters(element["cell"])
 
     def days_difference(self, d1, d2):
-        date_format = "%Y-%m-%dT%H:%M:%S.%fZ"
         if type(d1) is str:
-            d1 = datetime.strptime(d1, date_format).date()
+            d1 = string_to_date(d1, "%Y-%m-%dT%H:%M:%S.%fZ")
         if type(d2) is str:
-            d2 = datetime.strptime(d2, date_format).date()
+            d2 = string_to_date(d2, "%Y-%m-%dT%H:%M:%S.%fZ")
             d2 = date(datetime.now().year, d2.month, d2.day)
         result = (d1 - d2).days
         if result < 0:
@@ -53,7 +53,6 @@ class JsonLoader:
         current_date = date.today()
         dtb = self.days_difference(current_date, dob["date"])
         dtb = str(dtb).split(',')
-        # print("days to birthday" + str(dtb))
         return dtb
 
     def add_days_to_birthday(self, element):
