@@ -1,4 +1,5 @@
 from utils import string_to_date
+from password_rater import Password, PasswordRater
 from database_handler import Person
 
 
@@ -37,6 +38,36 @@ class PopularElementsHandler(QueryHandler):
     def get_n_popular_values(self, n):
         sorted_values = self.sort_dictionary_decreasing(self.get_counts())
         return sorted_values[0:n]
+
+
+class PasswordHandler(QueryHandler):
+
+    def __init__(self):
+        self.best_password = Password("")
+
+    def get_all_passwords(self):
+        persons = self.get_all_persons().dicts()
+        passwords = []
+        for person in persons:
+            passwords.append(person["login"]["password"])
+        return passwords
+
+    def rate_passwords(self):
+        for password in self.get_all_passwords():
+            temp_password_rater = PasswordRater(password)
+            temp_password_rater.rate_password()
+            self.check_rating(temp_password_rater)
+
+    def get_best(self):
+        self.rate_passwords()
+        return self.best_password
+
+    def change_best_password(self, password_with_rating):
+        self.best_password = password_with_rating
+
+    def check_rating(self, password_with_rating):
+        if password_with_rating.get_rating() > self.best_password.get_rating():
+            self.change_best_password(password_with_rating)
 
 
 class DateHandler(QueryHandler):
