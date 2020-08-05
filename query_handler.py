@@ -19,21 +19,17 @@ class PopularElementsHandler(QueryHandler):
         return sorted(dictionary.items(), key=lambda x: x[1], reverse=True)
 
     def get_counts(self):
-        # values_tuple[0] are just unique values, values_tuple[1] is list of all values
-        values = {}
-        values_tuple = self.get_all()
-        for value in values_tuple[0]:
-            values[value] = 0
-        for value in values_tuple[1]:
-            values[value] = values[value] + 1
-        return values
+        dictionary = {}
+        for value in self.get_all():
+            dictionary[value] = dictionary.setdefault(value, 0) + 1
+        return dictionary
 
     def get_all(self):
         elements = Person.select(self.searched_field).dicts()
         values = []
         for element in elements:
             values.append(element[self.searched_keys[0]][self.searched_keys[1]])
-        return list(set(values)), values
+        return values
 
     def get_n_popular_values(self, n):
         sorted_values = self.sort_dictionary_decreasing(self.get_counts())
