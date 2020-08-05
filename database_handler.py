@@ -16,7 +16,7 @@ class DatabaseHandler:
     def create_person_table(self):
         Person.create_table()
 
-    def insert_json(self, data):
+    def insert_data(self, data):
         with self.db.atomic():
             for batch in chunked(data, 5):
                 Person.insert_many(batch).execute()

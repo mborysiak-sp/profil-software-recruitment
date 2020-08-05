@@ -13,7 +13,7 @@ def get_modified_json():
 def __main__():
     data = get_modified_json()["results"]
     my_database_handler = DatabaseHandler()
-    my_database_handler.insert_json(data)
+    my_database_handler.insert_data(data)
     # print(database_handler.get_gender_percent("male"))
     # print(database_handler.get_gender_percent("female"))
     # print(database_handler.get_average_gender_age("male"))
