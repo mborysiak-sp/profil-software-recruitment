@@ -13,7 +13,7 @@ def cli():
 @click.argument("gender", nargs=1)
 def average_age(gender):
     temp_gender_handler = GenderHandler()
-    click.echo(f"Average age for {gender}: {temp_gender_handler.get_average_gender_age(gender)}")
+    click.echo(f"Average age `for {gender}: {temp_gender_handler.get_average_gender_age(gender)}")
 
 
 @cli.command(help="Prints -n most common cities")
@@ -45,13 +45,24 @@ def safest_password():
 
 @cli.command(help="Loads given file to database")
 @click.argument("file", nargs=1)
-def load(file):
+def load_from_file(file):
     temp_json_loader = JsonLoader()
     temp_json_loader.load_file(file)
     temp_json_loader.modify_file()
     temp_database_handler = DatabaseHandler()
     temp_database_handler.insert_data(temp_json_loader.data["results"])
     click.echo("File loaded")
+
+
+@cli.command(help="Loads given amount of users to database")
+@click.argument("n", nargs=1)
+def load_from_api(n):
+    temp_json_loader = JsonLoader()
+    temp_json_loader.load_data_from_api(n)
+    temp_json_loader.modify_file()
+    temp_database_handler = DatabaseHandler()
+    temp_database_handler.insert_data(temp_json_loader.data["results"])
+    click.echo("Api loaded")
 
 
 if __name__ == '__main__':

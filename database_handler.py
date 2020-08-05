@@ -5,7 +5,7 @@ from playhouse.sqlite_ext import SqliteExtDatabase
 
 class DatabaseHandler:
 
-    db = SqliteExtDatabase("persons.db", pragmas=(
+    db = SqliteExtDatabase("database.db", pragmas=(
         ("cache_size", -1024 * 64),
         ("journal_mode", "wal"),
         ("foreign_keys", 1)))

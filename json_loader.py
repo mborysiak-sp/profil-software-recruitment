@@ -3,6 +3,7 @@ import re
 from datetime import datetime
 from datetime import date
 from utils import string_to_date
+from api import Api
 
 
 class JsonLoader:
@@ -11,17 +12,19 @@ class JsonLoader:
         self.data = {}
 
     def load_file(self, filename):
-        print("attempting to load file")
         with open(filename, 'r', encoding="utf-8") as file:
             self.data = json.load(file)
 
+    def load_data_from_api(self, n):
+        self.data["results"] = []
+        for i in range(0, int(n)):
+            self.data["results"].append((Api.get("https://randomuser.me/api/")["results"][0]))
+
     def save_file(self, filename):
-        print("attempting to save file")
         with open(filename, 'w') as file:
             json.dump(self.data, file)
 
     def modify_file(self):
-        print("attempting to modify file")
         if self.data is not None:
             for element in self.data["results"]:
                 element.pop("picture", None)
