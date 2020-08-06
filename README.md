@@ -1,2 +1,29 @@
 # profil-software-recruitment
-Simple Python 3.8.3 project with SQLite3
+
+## Installation:
+
+Create virtual environment
+```pythonregexp
+$ virtualenv venv
+```
+Activate virtual enviornment
+```pythonregexp
+$ path\to\venv\Scripts\activate.bat
+```
+Install dependencies
+```pythonregexp
+$ pip install -r requirements.txt
+```
+
+## Usage
+
+Run a command:
+```pythonregexp
+$ cli command
+```
+
+List of commands:
+```pythonregexp
+$ cli --help
+```
+
