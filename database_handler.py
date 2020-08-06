@@ -35,6 +35,9 @@ class Person(Model):
     class Meta:
         database = DatabaseHandler.db
 
+    def __str__(self):
+        print(f"Name: {self.name}, Date of birth: {self.dob}")
+
     __tablename__ = "person"
     gender = TextField()
     name = MyJSONField()

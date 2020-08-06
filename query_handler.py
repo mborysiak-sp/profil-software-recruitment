@@ -8,32 +8,50 @@ class QueryHandler:
     def get_all_persons(self):
         return Person.select()
 
+    def get_all(self, searched_key, searched_value):
+        persons = QueryHandler.get_all_persons().dicts()
+        values = []
+        for person in persons:
+            values.append(person[searched_key][searched_value])
+        return values
 
-class PopularElementsHandler(QueryHandler):
 
-    def __init__(self, searched_field, searched_keys):
-        self.searched_field = searched_field
-        self.searched_keys = searched_keys
+class CommonElementsHandler(QueryHandler):
+
+    def __init__(self, searched_key, searched_value):
+        self.searched_value = searched_value
+        self.searched_key = searched_key
 
     def sort_dictionary_decreasing(self, dictionary):
         return sorted(dictionary.items(), key=lambda x: x[1], reverse=True)
 
     def get_counts(self):
         dictionary = {}
-        for value in self.get_all():
+        for value in self.get_all(self.searched_key, self.searched_value):
             dictionary[value] = dictionary.setdefault(value, 0) + 1
         return dictionary
 
-    def get_all(self):
-        elements = Person.select(self.searched_field).dicts()
-        values = []
-        for element in elements:
-            values.append(element[self.searched_keys[0]][self.searched_keys[1]])
-        return values
-
-    def get_n_popular_values(self, n):
+    def get_n_common_values(self, n):
         sorted_values = self.sort_dictionary_decreasing(self.get_counts())
         return sorted_values[0:n]
+
+
+class CommonPasswordsHandler(CommonElementsHandler):
+
+    def __init__(self):
+        super().__init__("login", "password")
+
+    def get_n_common_passwords(self, n):
+        return self.get_n_common_values(n)
+
+
+class CommonCitiesHandler(CommonElementsHandler):
+
+    def __init__(self):
+        super().__init__("location", "city")
+
+    def get_n_common_cities(self, n):
+        return self.get_n_common_values(n)
 
 
 class PasswordHandler(QueryHandler):
@@ -42,11 +60,7 @@ class PasswordHandler(QueryHandler):
         self.best_password = Password("")
 
     def get_all_passwords(self):
-        persons = self.get_all_persons().dicts()
-        passwords = []
-        for person in persons:
-            passwords.append(person["login"]["password"])
-        return passwords
+        return self.get_all("login", "password")
 
     def rate_passwords(self):
         for password in self.get_all_passwords():
@@ -54,7 +68,7 @@ class PasswordHandler(QueryHandler):
             temp_password_rater.rate_password()
             self.check_rating(temp_password_rater)
 
-    def get_best(self):
+    def get_best_password(self):
         self.rate_passwords()
         return self.best_password
 
@@ -73,10 +87,10 @@ class DateHandler(QueryHandler):
         self.second_date = string_to_date(second_date, "%Y-%m-%d")
 
     def get_persons_between_dates(self):
-        return filter(lambda person: self.first_date
+        return list(filter(lambda person: self.first_date
                                      < string_to_date(person["dob"]["date"],
                                                       "%Y-%m-%dT%H:%M:%S.%fZ")
-                                     < self.second_date, self.get_all_persons().dicts())
+                                     < self.second_date, self.get_all_persons().dicts()))
 
 
 class GenderHandler(QueryHandler):
