@@ -9,7 +9,7 @@ class QueryHandler:
         return Person.select()
 
     def get_all(self, searched_key, searched_value):
-        persons = QueryHandler.get_all_persons().dicts()
+        persons = self.get_all_persons().dicts()
         values = []
         for person in persons:
             values.append(person[searched_key][searched_value])
