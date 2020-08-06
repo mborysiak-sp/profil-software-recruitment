@@ -2,7 +2,7 @@
 
 ## Description
 It is a console project made for recruitment purposes. It loads json data based on https://randomuser.me/ api,
-manipulates it's data, inserts it into sqlite database using peewee ORM and then get's user requested data through CLI
+manipulates it, inserts it into sqlite database using peewee ORM and then get's user requested data through CLI
 based on click.
 
 ## Requirements
