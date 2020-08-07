@@ -50,7 +50,7 @@ def load_from_file(file):
     temp_json_loader.load_file(file)
     temp_json_loader.modify_file()
     temp_database_handler = DatabaseHandler()
-    temp_database_handler.insert_data(temp_json_loader.data["results"])
+    temp_database_handler.insert_data_into_person(temp_json_loader.data["results"])
     click.echo("File loaded")
 
 
@@ -61,7 +61,7 @@ def load_from_api(n):
     temp_json_loader.load_data_from_api(n)
     temp_json_loader.modify_file()
     temp_database_handler = DatabaseHandler()
-    temp_database_handler.insert_data(temp_json_loader.data["results"])
+    temp_database_handler.insert_data_into_person(temp_json_loader.data["results"])
     click.echo("Api loaded")
 
 
